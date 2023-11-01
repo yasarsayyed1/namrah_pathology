@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pathology Billing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('namrah.jpg'); /* Replace 'namrah.jpg' with your background image */
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        button[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button[type="button"]:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin: 5px 0;
+            padding: 5px 10px;
+        }
+        li button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        p {
+            font-weight: bold;
+            color: #4caf50;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pathology Billing</h1>
+        <label for="test_name">Test Name:</label>
+        <input type="text" id="test_name" name="test_name">
+        <label for="test_price">Test Price (in Rupees):</label>
+        <input type="number" id="test_price" name="test_price" step="0.01">
+        <button type="button" onclick="addTest()">Add for Calculation</button>
+        <ul id="test-list">
+            <!-- Test items will be displayed here -->
+        </ul>
+        <button type="button" onclick="calculateBill()">Calculate Total Bill</button>
+        <p id="total_bill"></p>
+    </div>
+
+    <script>
+        const testList = [];
+
+        function addTest() {
+            const testName = document.getElementById("test_name").value;
+            const testPrice = parseFloat(document.getElementById("test_price").value) || 0;
+
+            if (testName && testPrice) {
+                testList.push({ testName, testPrice });
+                renderTestList();
+            }
+        }
+
+        function renderTestList() {
+            const testListContainer = document.getElementById("test-list");
+            testListContainer.innerHTML = "";
+
+            testList.forEach((test, index) => {
+                const testItem = document.createElement("li");
+                testItem.innerHTML = `
+                    <span>${test.testName} - ₹${test.testPrice.toFixed(2)}</span>
+                    <button type="button" onclick="removeTest(${index})">Remove</button>
+                `;
+                testListContainer.appendChild(testItem);
+            });
+        }
+
+        function removeTest(index) {
+            testList.splice(index, 1);
+            renderTestList();
+        }
+
+        function calculateBill() {
+            const totalCost = testList.reduce((acc, test) => {
+                return acc + test.testPrice;
+            }, 0);
+
+            document.getElementById("total_bill").textContent = `Total Bill: ₹${totalCost.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
